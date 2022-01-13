@@ -1,100 +1,130 @@
 import {React, useEffect, useState} from "react";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
+    BrowserRouter as Router,
+    Routes,
+    Route,
 } from "react-router-dom";
-import { ChakraProvider, Box } from "@chakra-ui/react";
-import MainPage from "../main-page";
-import { useDispatch } from "react-redux";
-import { setCurrentPage } from "../../redux/people/peopleActions";
+import {Box, useDisclosure} from "@chakra-ui/react";
+import AppHeader from "../app-header";
+import {useDispatch, useSelector} from "react-redux";
+import {setCurrentPage} from "../../redux/people/peopleActions";
 import StarshipsPage from "../../pages/starships-page";
 import PeoplePage from "../../pages/people-page";
-import LoginPage from "../../pages/loginPage/loginPage";
-import RegisterPage from "../../pages/registerPage/registerPage";
-import {loginSuccess} from "../../redux/auth/authActions";
+import LoginPage from "../../pages/login-page/login-page";
+import RegisterPage from "../../pages/register-page/register-page";
+import {loginSuccess, setIsAuthenticated} from "../../redux/auth/authActions";
+import LoginDrawer from "../login-drawer/login-drawer";
+import ChatPage from "../../pages/chat-page/chat-page";
+import MainPage from "../main-page/main-page";
+
 
 function App() {
-  const [inputValue, setSearchValue] = useState("");
-  const [sortOrder, setOrder] = useState(null);
-  const [sortColumn, setSortColumn] = useState(null);
-  const dispatch = useDispatch();
+    const [inputValue, setSearchValue] = useState("");
+    const [sortOrder, setOrder] = useState(null);
+    const [sortColumn, setSortColumn] = useState(null);
+    const dispatch = useDispatch();
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    // const history = useNavigate();
 
-  useEffect(() => {
-    const data = localStorage.getItem('token');
-    if(data) {
-      dispatch(loginSuccess(data))
-    }
-  }, [])
+    const authStore = useSelector((state) => ({
+        isAuthenticated: state.auth.isAuthenticated
+    }));
 
-  const onSortChange = (newSortColumn, newSortOrder) => {
-    if (sortColumn === newSortColumn) {
-      setOrder(newSortOrder);
-    } else {
-      setOrder("asc");
-    }
+    let {
+        isAuthenticated
+    } = authStore;
 
-    setSortColumn(newSortColumn);
-  };
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('user');
 
-  const onSearchChange = (e) => {
-    setSearchValue(e.target.value); //rename value
-  };
+        if (token && email) {
+            dispatch(loginSuccess(token, email));
+            dispatch(setIsAuthenticated(true));
+        }
+    }, [])
 
-  const onLogout = () => {
-    localStorage.setItem('token', null);
-    dispatch(loginSuccess(null))
-  };
+    const onSortChange = (newSortColumn, newSortOrder) => {
+        if (sortColumn === newSortColumn) {
+            setOrder(newSortOrder);
+        } else {
+            setOrder("asc");
+        }
 
-  const dispatchSetCurrentPage = (page) => {
-    dispatch(setCurrentPage(page));
-  };
-  return (
-    <ChakraProvider>
-      <Router>
-        <Box
-          className="table__wrapper"
-          border="1px solid rgba(224, 224, 224, 1)"
-          borderBottom="none"
-          borderRadius="4"
-        >
-          <Routes>
-            <Route path='/login' element={<LoginPage/>} />
-            <Route path='/register' element={<RegisterPage/>} />
-            <Route path="/" element={<MainPage onLogout={onLogout} />} />
-            <Route
-              path="/people"
-              element={
-                <PeoplePage
-                  onSortChange={onSortChange}
-                  sortOrder={sortOrder}
-                  setOrder={() => setOrder}
-                  sortColumn={sortColumn}
-                  onSearchChange={onSearchChange}
-                  inputValue={inputValue}
-                  dispatchSetCurrentPage={dispatchSetCurrentPage}
-                />
-              }
+        setSortColumn(newSortColumn);
+    };
+
+    const onSearchChange = (e) => {
+        setSearchValue(e.target.value);
+    };
+
+    const onLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user')
+        dispatch(setIsAuthenticated(false));
+        dispatch(loginSuccess())
+    };
+
+    const dispatchSetCurrentPage = (page) => {
+        dispatch(setCurrentPage(page));
+    };
+    return (
+        <Box style={{"height": " 100vh"}}>
+            <LoginDrawer
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
             />
-            <Route
-              path="/starships"
-              element={
-                <StarshipsPage
-                  onSortChange={onSortChange}
-                  sortOrder={sortOrder}
-                  setOrder={() => setOrder}
-                  sortColumn={sortColumn}
-                  onSearchChange={onSearchChange}
-                  inputValue={inputValue}
-                  dispatchSetCurrentPage={dispatchSetCurrentPage}
-                />
-              }
-            />
-          </Routes>
+            <Router>
+                <Box
+                    className="table__wrapper"
+                    border="1px solid rgba(224, 224, 224, 1)"
+                    borderBottom="none"
+                    borderRadius="4"
+                >
+                    <AppHeader onLogout={onLogout} isAuthenticated={isAuthenticated} onOpen={onOpen}/>
+                    <Routes>
+                        <Route path='/login' element={<LoginPage/>}/>
+                        <Route path='/register' element={<RegisterPage/>}/>
+                        <Route path="/" element={<MainPage/>}/>
+                        <Route
+                            path="/people"
+                            element={
+                                <PeoplePage
+                                    onSortChange={onSortChange}
+                                    sortOrder={sortOrder}
+                                    setOrder={() => setOrder}
+                                    sortColumn={sortColumn}
+                                    onSearchChange={onSearchChange}
+                                    inputValue={inputValue}
+                                    dispatchSetCurrentPage={dispatchSetCurrentPage}
+                                    isAuthenticated={isAuthenticated}
+                                />
+                            }
+                        />
+                        <Route path="/chat"
+                               element={<ChatPage/>}
+                        />
+                        <Route
+                            path="/starships"
+                            element={
+                                <StarshipsPage
+                                    onSortChange={onSortChange}
+                                    sortOrder={sortOrder}
+                                    setOrder={() => setOrder}
+                                    sortColumn={sortColumn}
+                                    onSearchChange={onSearchChange}
+                                    inputValue={inputValue}
+                                    dispatchSetCurrentPage={dispatchSetCurrentPage}
+                                    isAuthenticated={isAuthenticated}
+                                />
+                            }
+                        />
+                    </Routes>
+                </Box>
+            </Router>
         </Box>
-      </Router>
-    </ChakraProvider>
-  );
+    );
 }
 
 export default App;
