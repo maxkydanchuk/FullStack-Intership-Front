@@ -5,20 +5,24 @@ import PeopleDataGrid from "../../components/people-data-grid";
 import PageNavbar from "../../components/page-navbar";
 import BottomButtons from "../../components/bottom-buttons";
 import PeopleModal from "../../components/people-modal";
-import {useDisclosure} from "@chakra-ui/react";
+import AlertWindow from "../../components/alert-window/alert-window";
+import { useDisclosure} from "@chakra-ui/react";
 
 
 const PeoplePage = ({
-  onSortChange,
-  sortOrder,
-  setOrder,
-  sortColumn,
-  onSearchChange,
-  inputValue,
-  dispatchSetCurrentPage,
-}) => {
+                      onSortChange,
+                      sortOrder,
+                      setOrder,
+                      sortColumn,
+                      onSearchChange,
+                      inputValue,
+                      dispatchSetCurrentPage,isAuthenticated
+                    }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [alertIsOpen, setAlertIsOpen] = useState(false)
+    const alertOnClose = () => setAlertIsOpen(false)
 
   const peopleStore = useSelector((state) => ({
     peopleData: state.people.data,
@@ -29,7 +33,7 @@ const PeoplePage = ({
   }));
 
   const authStore = useSelector((state) => ({
-    token: state.auth
+    token: state.auth.token
   }));
 
   let {
@@ -50,31 +54,41 @@ const PeoplePage = ({
 
   useEffect(() => {
     dispatch(
-      fetchPeopleData(
-        { sortOrder, sortColumn, inputValue, currentPage: peopleCurrentPage },
-        peopleData
-      )
+        fetchPeopleData(
+            { sortOrder, sortColumn, inputValue, currentPage: peopleCurrentPage },
+            peopleData
+        )
     );
   }, [sortOrder, sortColumn, inputValue, peopleData.length, peopleCurrentPage]);
 
-    useEffect(() => {
-      return () => {
-        dispatch(resetStore());
-      }
-    }, [])
+  useEffect(() => {
+    return () => {
+      dispatch(resetStore());
+    }
+  }, [])
 
   const [itemToEdit, setItemToEdit] = useState();
+  const [itemToDelete, setItemToDelete] = useState();
 
   const handleEditItem = (item) => {
     setItemToEdit(item);
     onOpen();
   }
 
+  const handleDeleteItem = (item) => {
+      setItemToDelete(item);
+      setAlertIsOpen(true);
+  }
+
+  const label = 'person'
   return (
       <>
         <PageNavbar
             onSearchChange={onSearchChange}
             inputValue={inputValue}
+            onCreateItem={handleEditItem}
+            label={label}
+            isAuthenticated={isAuthenticated}
         />
         <PeopleModal
             isOpen={isOpen}
@@ -82,6 +96,14 @@ const PeoplePage = ({
             person={itemToEdit}
             token={token}
         />
+          <AlertWindow
+              alertIsOpen={alertIsOpen}
+              setAlertIsOpen={setAlertIsOpen}
+              alertOnClose={alertOnClose}
+              person={itemToDelete}
+              dispatchDeletePerson={dispatchDeletePerson}
+              token={token}
+          />
         <PeopleDataGrid
             peopleData={peopleData}
             error={peopleError}
@@ -94,7 +116,9 @@ const PeoplePage = ({
             onOpen={onOpen}
             onClose={onClose}
             onEditItem={handleEditItem}
+            onDeleteItem={handleDeleteItem}
             token={token}
+            isAuthenticated={isAuthenticated}
         />
         <BottomButtons
             currentPage={peopleCurrentPage}

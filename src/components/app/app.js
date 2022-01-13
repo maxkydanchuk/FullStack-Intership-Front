@@ -4,26 +4,38 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import { ChakraProvider, Box } from "@chakra-ui/react";
+import {ChakraProvider, Box, useDisclosure} from "@chakra-ui/react";
 import MainPage from "../main-page";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { setCurrentPage } from "../../redux/people/peopleActions";
 import StarshipsPage from "../../pages/starships-page";
 import PeoplePage from "../../pages/people-page";
-import LoginPage from "../../pages/loginPage/loginPage";
-import RegisterPage from "../../pages/registerPage/registerPage";
-import {loginSuccess} from "../../redux/auth/authActions";
+import LoginPage from "../../pages/login-page/login-page";
+import RegisterPage from "../../pages/register-page/register-page";
+import {loginSuccess, setIsAuthenticated} from "../../redux/auth/authActions";
+import LoginDrawer from "../login-drawer/login-drawer";
 
 function App() {
   const [inputValue, setSearchValue] = useState("");
   const [sortOrder, setOrder] = useState(null);
   const [sortColumn, setSortColumn] = useState(null);
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const history = useNavigate();
+
+  const authStore = useSelector((state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+  }));
+
+  let  {
+    isAuthenticated
+  } = authStore;
 
   useEffect(() => {
     const data = localStorage.getItem('token');
     if(data) {
-      dispatch(loginSuccess(data))
+      dispatch(loginSuccess(data));
+      dispatch(setIsAuthenticated(true));
     }
   }, [])
 
@@ -42,58 +54,68 @@ function App() {
   };
 
   const onLogout = () => {
-    localStorage.setItem('token', null);
-    dispatch(loginSuccess(null))
+    localStorage.removeItem('token');
+    dispatch(setIsAuthenticated(false));
+    dispatch(loginSuccess())
+
+    // history("/");
   };
 
   const dispatchSetCurrentPage = (page) => {
     dispatch(setCurrentPage(page));
   };
   return (
-    <ChakraProvider>
-      <Router>
-        <Box
-          className="table__wrapper"
-          border="1px solid rgba(224, 224, 224, 1)"
-          borderBottom="none"
-          borderRadius="4"
-        >
-          <Routes>
-            <Route path='/login' element={<LoginPage/>} />
-            <Route path='/register' element={<RegisterPage/>} />
-            <Route path="/" element={<MainPage onLogout={onLogout} />} />
-            <Route
-              path="/people"
-              element={
-                <PeoplePage
-                  onSortChange={onSortChange}
-                  sortOrder={sortOrder}
-                  setOrder={() => setOrder}
-                  sortColumn={sortColumn}
-                  onSearchChange={onSearchChange}
-                  inputValue={inputValue}
-                  dispatchSetCurrentPage={dispatchSetCurrentPage}
-                />
-              }
-            />
-            <Route
-              path="/starships"
-              element={
-                <StarshipsPage
-                  onSortChange={onSortChange}
-                  sortOrder={sortOrder}
-                  setOrder={() => setOrder}
-                  sortColumn={sortColumn}
-                  onSearchChange={onSearchChange}
-                  inputValue={inputValue}
-                  dispatchSetCurrentPage={dispatchSetCurrentPage}
-                />
-              }
-            />
-          </Routes>
-        </Box>
-      </Router>
-    </ChakraProvider>
+      <ChakraProvider>
+        <LoginDrawer
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+        />
+        <Router>
+          <Box
+              className="table__wrapper"
+              border="1px solid rgba(224, 224, 224, 1)"
+              borderBottom="none"
+              borderRadius="4"
+          >
+            <Routes>
+              <Route path='/login' element={<LoginPage/>} />
+              <Route path='/register' element={<RegisterPage/>} />
+              <Route path="/" element={<MainPage onLogout={onLogout} isAuthenticated={isAuthenticated} onOpen={onOpen} />} />
+              <Route
+                  path="/people"
+                  element={
+                    <PeoplePage
+                        onSortChange={onSortChange}
+                        sortOrder={sortOrder}
+                        setOrder={() => setOrder}
+                        sortColumn={sortColumn}
+                        onSearchChange={onSearchChange}
+                        inputValue={inputValue}
+                        dispatchSetCurrentPage={dispatchSetCurrentPage}
+                        isAuthenticated={isAuthenticated}
+                    />
+                  }
+              />
+              <Route
+                  path="/starships"
+                  element={
+                    <StarshipsPage
+                        onSortChange={onSortChange}
+                        sortOrder={sortOrder}
+                        setOrder={() => setOrder}
+                        sortColumn={sortColumn}
+                        onSearchChange={onSearchChange}
+                        inputValue={inputValue}
+                        dispatchSetCurrentPage={dispatchSetCurrentPage}
+                        isAuthenticated={isAuthenticated}
+                    />
+                  }
+              />
+            </Routes>
+          </Box>
+        </Router>
+      </ChakraProvider>
   );
 }
 

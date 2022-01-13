@@ -3,7 +3,8 @@ import { Flex, Box } from "@chakra-ui/react";
 import DataGridHeaderRow from "./data-grid-header-row";
 
 const DataGridHeader = (props) => {
-  
+
+  const { isAuthenticated } = props
   return (
     <Flex
       className="table__header"
@@ -15,8 +16,8 @@ const DataGridHeader = (props) => {
       h="20"
     >
       <DataGridHeaderRow props={props}/>
-      <Box flex='1'></Box>
-      <Box flex='1'></Box>
+      {isAuthenticated && <Box flex='1'/>}
+      {isAuthenticated && <Box flex='1'/>}
     </Flex>
   );
 };

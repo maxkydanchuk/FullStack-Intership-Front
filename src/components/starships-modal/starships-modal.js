@@ -20,10 +20,10 @@ const StarshipsModal = ({ isOpen, onClose, starship = {}, token }) => {
   const [pilots, setPilots] = useState(starship.pilots || "");
   const [MGLT, setMGLT] = useState(starship.MGLT || "");
   const [starshipClass, setStarshipClass] = useState(
-    starship.starshipClass || ""
+      starship.starshipClass || ""
   );
   const [hyperdriveRating, setHyperdriveRating] = useState(
-    starship.hyperdriveRating || ""
+      starship.hyperdriveRating || ""
   );
 
   useEffect(() => {

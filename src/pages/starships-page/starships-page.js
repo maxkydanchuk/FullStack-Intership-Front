@@ -4,19 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import StarshipsDataGrid from "../../components/starships-data-grid";
 import PageNavbar from "../../components/page-navbar";
 import BottomButtons from "../../components/bottom-buttons";
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure} from "@chakra-ui/react";
 import StarshipsModal from "../../components/starships-modal";
 
 
 const StarshipsPage = ({
-  onSortChange,
-  sortOrder,
-  setOrder,
-  sortColumn,
-  onSearchChange,
-  inputValue,
-  dispatchSetCurrentPage,
-}) => {
+                         onSortChange,
+                         sortOrder,
+                         setOrder,
+                         sortColumn,
+                         onSearchChange,
+                         inputValue,
+                         dispatchSetCurrentPage, isAuthenticated
+                       }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -30,7 +30,7 @@ const StarshipsPage = ({
   }));
 
   const authStore = useSelector((state) => ({
-    token: state.auth
+    token: state.auth.token
   }));
 
   let {
@@ -48,9 +48,9 @@ const StarshipsPage = ({
   }
   useEffect(() => {
     dispatch(
-      fetchStarshipsData(
-        {sortOrder,sortColumn, inputValue, currentPage: starshipsCurrentPage,}, starshipsData
-      )
+        fetchStarshipsData(
+            {sortOrder,sortColumn, inputValue, currentPage: starshipsCurrentPage,}, starshipsData
+        )
     );
   }, [ sortOrder, sortColumn, inputValue, starshipsData.length, starshipsCurrentPage]);
 
@@ -67,12 +67,16 @@ const StarshipsPage = ({
     onOpen();
   }
 
+  const label  = 'starship';
+
   return (
       <>
         <PageNavbar
             onSearchChange={onSearchChange}
             inputValue={inputValue}
             onCreateItem={handleEditItem}
+            isAuthenticated={isAuthenticated}
+            label={label}
         />
         <StarshipsModal
             isOpen={isOpen}
@@ -93,6 +97,7 @@ const StarshipsPage = ({
             onClose={onClose}
             onEditItem={handleEditItem}
             token={token}
+            isAuthenticated={isAuthenticated}
 
         />
         <BottomButtons

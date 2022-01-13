@@ -23,7 +23,6 @@ const PeopleModal = ({ isOpen, onClose, person = {}, token }) => {
   const [eyeColor, setEyeColor] = useState(person.eyeColor || "");
   const [height, setHeight] = useState(person.height || "");
 
-
   useEffect(() => {
     setName(person.name);
     setBirthYear(person.birthYear);
@@ -47,7 +46,6 @@ const PeopleModal = ({ isOpen, onClose, person = {}, token }) => {
     setGender('');
     setEyeColor('');
     setHeight('');
-
   };
 
   const submitNewItem = async (e) => {
