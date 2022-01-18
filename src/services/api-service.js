@@ -4,17 +4,18 @@ export default class apiService {
 
   async getResource(url) {
     const res = await fetch(`${this._apiBase}${url}`);
-    // if (!res.ok) {
-    //   throw new Error(`Could not fetch ${url}, status ${res.status}`);
-    // }
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status ${res.status}`);
+    }
     return await res.json();
   }
 
-  async postResource(url, data = {}) {
-    const res = await fetch(`${this._apiBase}${url}`, {
+  async postResource(url, data = {}, token) {
+    const res = await fetch(`${this._apiBase}/${url}/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token' : token
       },
       body: JSON.stringify(data)
     });
@@ -24,17 +25,13 @@ export default class apiService {
     return await res.json();
   }
 
-  createPerson = async (item) => {
-    return await this.postResource('/people/', item);
-  }
-
 
   deleteResource  = async(url, id, token) => {
     const res = await fetch(`${this._apiBase}/${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token' : token.state
+        'x-access-token' : token
       }
     });
     // if (!res.ok) {
@@ -48,7 +45,7 @@ export default class apiService {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token' : token.state
+        'x-access-token' : token
       },
       body: JSON.stringify(data)
     });
@@ -65,8 +62,8 @@ export default class apiService {
       res = await this.getResource(`/people?page=${currentPage}&size=${pageSize}&sortOrder=${param}&sortBy=${query}&search=${value}`)
     }
     else if(param && query) {
-       res = await this.getResource(`/people?page=${currentPage}}&size=${pageSize}&sortOrder=${param}&sortBy=${query}`)
-    } 
+      res = await this.getResource(`/people?page=${currentPage}}&size=${pageSize}&sortOrder=${param}&sortBy=${query}`)
+    }
     else if(value) {
       res = await this.getResource(`/people?page=${currentPage}&size=${pageSize}&search=${value}`)
     }  else {
@@ -84,14 +81,14 @@ export default class apiService {
       res = await this.getResource(`/starships?page=${currentPage}&size=${pageSize}&sortOrder=${param}&sortBy=${query}&search=${value}`)
     }
     else if(param && query) {
-       res = await this.getResource(`/starships?page=${currentPage}}&size=${pageSize}&sortOrder=${param}&sortBy=${query}`)
-    } 
+      res = await this.getResource(`/starships?page=${currentPage}}&size=${pageSize}&sortOrder=${param}&sortBy=${query}`)
+    }
     else if(value) {
       res = await this.getResource(`/starships?page=${currentPage}&size=${pageSize}&search=${value}`)
     }  else {
       res = await this.getResource(`/starships?page=${currentPage}&size=${pageSize}`)
     }
-    
+
     return {data:this._adaptStaships(res), totalCount: res.totalCount};
   };
 
@@ -105,17 +102,26 @@ export default class apiService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-acess-token' : ''
+        'x-access-token' : ''
       },
       body: JSON.stringify(data)
     })
 
-    const response = res.json().then(res => (res));
-    localStorage.setItem('token', await response);
+    const response = await res.json();
+
+    if(res.ok) {
+      localStorage.setItem('token', await response.token);
+      localStorage.setItem('user', await response.email)
+    }
+
+    if (!res.ok) {
+      throw new Error(response.error);
+    }
+
     return response
   }
 
-  registerUser = async (data, token) => {
+  registerUser = async (data) => {
 
     const res = await fetch(`${this._apiBase}/register`, {
       method: 'POST',
@@ -124,16 +130,26 @@ export default class apiService {
       },
       body: JSON.stringify(data)
     });
+
+    const response = await res.json();
+
     if (!res.ok) {
-      // throw new Error(`Could not fetch , status ${res.status}`);
+      throw new Error(response.error);
     }
-    return await res.json();
+    return await response;
+  }
+
+
+  getAllMessages = async () => {
+    const res = await this.getResource('/chat')
+
+    return await res
   }
 
 
   _adaptPeople = (data) => {
     const result = [];
-    
+
     data.data.forEach((person) => {
       const { _id, fields } = person;
       const {
@@ -159,7 +175,7 @@ export default class apiService {
         MGLT,
         starship_class: starshipClass,
         hyperdrive_rating: hyperdriveRating,
- 
+
       } = fields;
       result.push({ _id, pilots, MGLT, starshipClass, hyperdriveRating });
     });

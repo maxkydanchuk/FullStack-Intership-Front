@@ -39,7 +39,7 @@ const StarshipsModal = ({ isOpen, onClose, starship = {}, token }) => {
   const initialRef = useRef();
   const finalRef = useRef();
 
-  const addNewItem = (item) => dispatch(addStarshipThunk(item));
+  const addNewItem = (item) => dispatch(addStarshipThunk(item, token));
   const updateItem = (item, id) => dispatch(updateStarshipThunk(item, id, token))
 
   function resetForm() {
@@ -47,7 +47,9 @@ const StarshipsModal = ({ isOpen, onClose, starship = {}, token }) => {
     setMGLT('');
     setStarshipClass('');
     setHyperdriveRating('');
-  };
+  }
+
+
 
   const submitNewItem = async (e) => {
     e.preventDefault();
@@ -60,7 +62,7 @@ const StarshipsModal = ({ isOpen, onClose, starship = {}, token }) => {
           starship_class: starshipClass,
           hyperdrive_rating: hyperdriveRating,
         }
-      }, starship._id)
+      }, starship._id);
     } else {
       addNewItem({
         fields: {

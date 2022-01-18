@@ -23,7 +23,6 @@ const PeopleModal = ({ isOpen, onClose, person = {}, token }) => {
   const [eyeColor, setEyeColor] = useState(person.eyeColor || "");
   const [height, setHeight] = useState(person.height || "");
 
-
   useEffect(() => {
     setName(person.name);
     setBirthYear(person.birthYear);
@@ -38,7 +37,7 @@ const PeopleModal = ({ isOpen, onClose, person = {}, token }) => {
   const initialRef = useRef();
   const finalRef = useRef();
 
-  const addNewItem = (item) => dispatch(addPersonThunk(item));
+  const addNewItem = (item) => dispatch(addPersonThunk(item, token));
   const updateItem = (item, id) => dispatch(updatePeopleThunk(item, id, token))
 
   function resetForm() {
@@ -47,8 +46,7 @@ const PeopleModal = ({ isOpen, onClose, person = {}, token }) => {
     setGender('');
     setEyeColor('');
     setHeight('');
-
-  };
+  }
 
   const submitNewItem = async (e) => {
     e.preventDefault();

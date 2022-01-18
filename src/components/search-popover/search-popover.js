@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import {Search2Icon} from "@chakra-ui/icons";
 
-const SearchPopover = ({inputValue, onSearchChange}) => {
+const SearchPopover = ({inputValue, setInputValue, onSearchChange}) => {
 
     return (
         <Popover placement="bottom-start">
@@ -25,7 +25,7 @@ const SearchPopover = ({inputValue, onSearchChange}) => {
                     >
                         <Input
                             type="search"
-                            placeholder="Search"
+                            outline="none"
                             size="md"
                             variant="filled"
                             maxW="90%"

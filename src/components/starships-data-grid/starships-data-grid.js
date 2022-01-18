@@ -14,7 +14,7 @@ const StarshipsDataGrid = ({
   dispatchDeleteStarship,
   isOpen, 
   onOpen, 
-  onClose, onEditItem, token
+  onClose, onEditItem, token, isAuthenticated
 }) => {
   const buttons = [
     { name: "starship_class", label: "Starship class" },
@@ -46,6 +46,7 @@ const StarshipsDataGrid = ({
         onClose={onClose}
         onEditItem={onEditItem}
         token={token}
+        isAuthenticated={isAuthenticated}
         />
       </Flex>
     );
@@ -60,6 +61,7 @@ const StarshipsDataGrid = ({
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
+        isAuthenticated={isAuthenticated}
       />
       <Flex className="table__row_wrapper" direction="column">
         {" "}

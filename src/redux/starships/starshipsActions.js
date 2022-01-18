@@ -70,10 +70,10 @@ export function fetchStarshipsData(param) {
     };
 }
 
-export function addStarshipThunk(item) {
+export function addStarshipThunk(item, token) {
     return  (dispatch) => {
         dispatch(dataAreLoading(true));
-        api.createStarship(item)
+        api.postResource('starships',item, token)
         .then((response) => dispatch(addStarship(response)))
         .catch(() => dispatch(dataHaveError(true)))
     }

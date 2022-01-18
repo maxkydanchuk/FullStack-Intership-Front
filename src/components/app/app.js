@@ -24,7 +24,6 @@ function App() {
     const [sortColumn, setSortColumn] = useState(null);
     const dispatch = useDispatch();
     const {isOpen, onOpen, onClose} = useDisclosure()
-    // const history = useNavigate();
 
     const authStore = useSelector((state) => ({
         isAuthenticated: state.auth.isAuthenticated
@@ -33,6 +32,7 @@ function App() {
     let {
         isAuthenticated
     } = authStore;
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -69,61 +69,61 @@ function App() {
         dispatch(setCurrentPage(page));
     };
     return (
-        <Box style={{"height": " 100vh"}}>
-            <LoginDrawer
-                isOpen={isOpen}
-                onOpen={onOpen}
-                onClose={onClose}
-            />
-            <Router>
-                <Box
-                    className="table__wrapper"
-                    border="1px solid rgba(224, 224, 224, 1)"
-                    borderBottom="none"
-                    borderRadius="4"
-                >
-                    <AppHeader onLogout={onLogout} isAuthenticated={isAuthenticated} onOpen={onOpen}/>
-                    <Routes>
-                        <Route path='/login' element={<LoginPage/>}/>
-                        <Route path='/register' element={<RegisterPage/>}/>
-                        <Route path="/" element={<MainPage/>}/>
-                        <Route
-                            path="/people"
-                            element={
-                                <PeoplePage
-                                    onSortChange={onSortChange}
-                                    sortOrder={sortOrder}
-                                    setOrder={() => setOrder}
-                                    sortColumn={sortColumn}
-                                    onSearchChange={onSearchChange}
-                                    inputValue={inputValue}
-                                    dispatchSetCurrentPage={dispatchSetCurrentPage}
-                                    isAuthenticated={isAuthenticated}
-                                />
-                            }
-                        />
-                        <Route path="/chat"
-                               element={<ChatPage/>}
-                        />
-                        <Route
-                            path="/starships"
-                            element={
-                                <StarshipsPage
-                                    onSortChange={onSortChange}
-                                    sortOrder={sortOrder}
-                                    setOrder={() => setOrder}
-                                    sortColumn={sortColumn}
-                                    onSearchChange={onSearchChange}
-                                    inputValue={inputValue}
-                                    dispatchSetCurrentPage={dispatchSetCurrentPage}
-                                    isAuthenticated={isAuthenticated}
-                                />
-                            }
-                        />
-                    </Routes>
+        <Router>
+                <Box style={{"height": " 100vh"}}>
+                    <LoginDrawer
+                        isOpen={isOpen}
+                        onOpen={onOpen}
+                        onClose={onClose}
+                    />
+                    <Box
+                        className="table__wrapper"
+                        border="1px solid rgba(224, 224, 224, 1)"
+                        borderBottom="none"
+                        borderRadius="4"
+                    >
+                        <AppHeader onLogout={onLogout} isAuthenticated={isAuthenticated} onOpen={onOpen}/>
+                        <Routes>
+                            <Route path='/login' element={<LoginPage/>}/>
+                            <Route path='/register' element={<RegisterPage/>}/>
+                            <Route path="/" element={<MainPage/>}/>
+                            <Route
+                                path="/people"
+                                element={
+                                    <PeoplePage
+                                        onSortChange={onSortChange}
+                                        sortOrder={sortOrder}
+                                        setOrder={() => setOrder}
+                                        sortColumn={sortColumn}
+                                        onSearchChange={onSearchChange}
+                                        inputValue={inputValue}
+                                        dispatchSetCurrentPage={dispatchSetCurrentPage}
+                                        isAuthenticated={isAuthenticated}
+                                    />
+                                }
+                            />
+                            <Route path="/chat"
+                                   element={<ChatPage/>}
+                            />
+                            <Route
+                                path="/starships"
+                                element={
+                                    <StarshipsPage
+                                        onSortChange={onSortChange}
+                                        sortOrder={sortOrder}
+                                        setOrder={() => setOrder}
+                                        sortColumn={sortColumn}
+                                        onSearchChange={onSearchChange}
+                                        inputValue={inputValue}
+                                        dispatchSetCurrentPage={dispatchSetCurrentPage}
+                                        isAuthenticated={isAuthenticated}
+                                    />
+                                }
+                            />
+                        </Routes>
+                    </Box>
                 </Box>
-            </Router>
-        </Box>
+        </Router>
     );
 }
 
