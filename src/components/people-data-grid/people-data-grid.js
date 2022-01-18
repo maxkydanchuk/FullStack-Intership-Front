@@ -9,7 +9,7 @@ const PeopleDataGrid = ({
                           error,
                           onSortChange,
                           sortOrder,
-                          sortColumn, dispatchDeletePerson, token, isOpen, onClose, onEditItem, onOpen, isAuthenticated
+                          sortColumn, dispatchDeletePerson, token, isOpen, onClose, onEditItem, onOpen, isAuthenticated, onDeleteItem
                         }) => {
 
   const buttons = [
@@ -37,12 +37,14 @@ const PeopleDataGrid = ({
             color="rgb(49, 47, 47)"
         >
           <PeoplePageItem
+              key={_id}
               {...item}
               dispatchDeletePerson={dispatchDeletePerson}
               isOpen={isOpen}
               onOpen={onOpen}
               onClose={onClose}
               onEditItem={onEditItem}
+              onDeleteItem={onDeleteItem}
               token={token}
               isAuthenticated={isAuthenticated}
           />
@@ -56,6 +58,7 @@ const PeopleDataGrid = ({
             sortOrder={sortOrder}
             sortColumn={sortColumn}
             buttons={buttons}
+            isAuthenticated={isAuthenticated}
         />
         <Flex className="table__row_wrapper" direction="column">
           {" "}

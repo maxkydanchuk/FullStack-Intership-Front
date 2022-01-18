@@ -10,11 +10,12 @@ export default class apiService {
     return await res.json();
   }
 
-  async postResource(url, data = {}) {
-    const res = await fetch(`${this._apiBase}${url}`, {
+  async postResource(url, data = {}, token) {
+    const res = await fetch(`${this._apiBase}/${url}/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token' : token
       },
       body: JSON.stringify(data)
     });
@@ -24,17 +25,13 @@ export default class apiService {
     return await res.json();
   }
 
-  createPerson = async (item) => {
-    return await this.postResource('/people/', item);
-  }
-
 
   deleteResource  = async(url, id, token) => {
     const res = await fetch(`${this._apiBase}/${url}/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token' : token.state
+        'x-access-token' : token
       }
     });
     // if (!res.ok) {
@@ -112,7 +109,10 @@ export default class apiService {
 
     const response = await res.json();
 
-    localStorage.setItem('token', await response);
+    if(res.ok) {
+      localStorage.setItem('token', await response.token);
+      localStorage.setItem('user', await response.email)
+    }
 
     if (!res.ok) {
       throw new Error(response.error);
@@ -137,6 +137,13 @@ export default class apiService {
       throw new Error(response.error);
     }
     return await response;
+  }
+
+
+  getAllMessages = async () => {
+    const res = await this.getResource('/chat')
+
+    return await res
   }
 
 

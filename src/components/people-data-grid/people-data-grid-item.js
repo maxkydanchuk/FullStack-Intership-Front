@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Button } from "@chakra-ui/react";
+import {DeleteIcon, EditIcon} from "@chakra-ui/icons";
 
-const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dispatchDeletePerson, onEditItem, token, isAuthenticated }) => {
+const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, onEditItem, isAuthenticated, onDeleteItem }) => {
 
     const person = {
         _id,
@@ -11,6 +12,7 @@ const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dis
         gender,
         height
     }
+
 
     return (
         <>
@@ -30,10 +32,10 @@ const PeopleDataGridItem = ({_id, name, birthYear, eyeColor, gender, height, dis
                 {height}
             </Box>
             {isAuthenticated &&  <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(person)}>
-                Edit
+                Edit <EditIcon/>
             </Button>}
-            {isAuthenticated &&  <Button  colorScheme='teal' variant='link' flex="1" onClick={ () => dispatchDeletePerson(_id, token)}>
-                Delete
+            {isAuthenticated &&  <Button  colorScheme='teal' variant='link' flex="1" onClick={() => onDeleteItem(person)}>
+                Delete <DeleteIcon/>
             </Button>}
         </>
     );

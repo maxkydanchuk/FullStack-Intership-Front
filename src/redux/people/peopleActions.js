@@ -64,10 +64,10 @@ export function fetchPeopleData(param) {
     };
 }
 
-export function addPersonThunk(item) {
+export function addPersonThunk(item, token) {
     return  (dispatch) => {
         dispatch(dataAreLoading(true));
-        api.createPerson(item)
+        api.postResource('people', item, token)
             .then((response) => dispatch(addPerson(response)))
             .catch(() => dispatch(dataHaveError(true)))
     }

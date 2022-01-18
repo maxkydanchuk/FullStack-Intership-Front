@@ -13,9 +13,10 @@ export const registerFail = (payload) => ({
     type: REGISTER_FAIL,
     payload
 })
-export const loginSuccess = (payload) => ({
+export const loginSuccess = (token, email) => ({
     type: LOGIN_SUCCESS,
-    payload
+    token,
+    email
 })
 
 export const loginFail = (bool) => ({
@@ -29,14 +30,14 @@ export const setIsAuthenticated = (bool) => ({
     isAuthenticated: bool
 })
 
-export function addLoginSuccessThunk(item, history) {
+export function addLoginSuccessThunk(item, closeAndReset) {
     return (dispatch) => {
         api.getUser(item)
             .then((response) => {
-                dispatch(loginSuccess(response))
-                dispatch(setIsAuthenticated(true))
-                dispatch(clearMessage())
-                history('/');
+                dispatch(loginSuccess(response.token, response.email));
+                dispatch(setIsAuthenticated(true));
+                dispatch(clearMessage());
+                closeAndReset();
             })
             .catch((e) => {
                 dispatch(loginFail(true))

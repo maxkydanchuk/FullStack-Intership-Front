@@ -20,7 +20,6 @@ const StarshipsPage = ({
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-
   const starshipsStore = useSelector((state) => ({
     starshipsData: state.starships.data,
     starshipsError: state.starships.error,
@@ -30,7 +29,7 @@ const StarshipsPage = ({
   }));
 
   const authStore = useSelector((state) => ({
-    token: state.auth
+    token: state.auth.token
   }));
 
   let {

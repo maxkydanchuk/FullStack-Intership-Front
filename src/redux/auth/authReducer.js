@@ -3,6 +3,7 @@ import { REGISTER_SUCCESS, LOGIN_SUCCESS, SET_IS_AUTHENTICATED, LOGIN_FAIL } fro
 let initialState = {
     isAuthenticated: false,
     token: null,
+    email: null,
     error: null,
 };
 
@@ -11,7 +12,8 @@ export const authReducer = (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
-                token: action.payload,
+                token: action.token,
+                email: action.email,
                 error: false,
             }
         case LOGIN_FAIL:
