@@ -23,7 +23,7 @@ test('App has body', () => {
     expect(body).toBeInTheDocument();
 });
 
-test('Login',   async() => {
+test('Login',async() => {
 
     fetch.mockResponseOnce(JSON.stringify({
         token: token,
