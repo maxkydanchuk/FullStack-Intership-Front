@@ -3,6 +3,7 @@ import { Button, Flex } from "@chakra-ui/react";
 import { createPages } from "../../utils/pageCreator";
 import { pageSize } from "../../configs/config";
 import "./main.css";
+import {ChevronLeftIcon, ChevronRightIcon} from "@chakra-ui/icons";
 
 const BottomButtons = ({
   currentPage,
@@ -25,24 +26,24 @@ const BottomButtons = ({
   });
 
   return (
-    <Flex align={"center"} justify={"center"} mt={"6"}>
+    <Flex className="bottom__buttons" align="center" justify="center" mt="2" >
       <Button
-        colorScheme="teal"
+        colorScheme="linkedin"
         variant="link"
-        display={"block"}
+        display="block"
         onClick={() => dispatchSetCurrentPage(0)}
       >
-        &#8606;
+        <ChevronLeftIcon w="5x" h="5"/>
       </Button>
       <div className="pages">{elements}</div>
       <Button
         colorScheme="teal"
-        outline={"none"}
+        outline="none"
         variant="link"
-        display={"block"}
+        display="block"
         onClick={() => dispatchSetCurrentPage(pageCount - 1)}
       >
-        &#8608;
+        <ChevronRightIcon w="5x" h="5"/>
       </Button>
     </Flex>
   );

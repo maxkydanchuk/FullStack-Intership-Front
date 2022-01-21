@@ -1,0 +1,29 @@
+.chakra-ui-light {
+    background: url("https://scontent.fiev15-1.fna.fbcdn.net/v/t31.18172-8/15800733_1416842991683875_3685132587312479503_o.jpg?_nc_cat=108&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=SFaiq4XmSw8AX8c_3ZK&_nc_ht=scontent.fiev15-1.fna&oh=00_AT85_WBinCQpU7u5S8hLsbTB1B0XIhCGDmOfvJxcOj7qYQ&oe=620DF7C6") center center/cover no-repeat;
+}
+
+.datagrid__page {
+    background: url("https://wallpapercave.com/dwp2x/oPRLSHe.png") center center/cover no-repeat;
+}
+
+.chat__page {
+    background: url("https://images8.alphacoders.com/105/thumb-1920-1054300.jpg") center center/cover no-repeat;
+}
+
+.register__page {
+    background: url("https://lumiere-a.akamaihd.net/v1/images/r2-d2-main_86916bb6.jpeg?region=304%2C0%2C1778%2C1000&width=1536") center center/cover no-repeat;
+}
+
+::-webkit-scrollbar {
+    background: none;
+    width: 7px;
+}
+
+/* Style the scrollbar handle */
+::-webkit-scrollbar-thumb {
+    background: lightblue;
+    border-radius: 20px;
+}
+
+
+

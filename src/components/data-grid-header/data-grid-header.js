@@ -10,7 +10,7 @@ const DataGridHeader = (props) => {
       align="center"
       flex='2'
       // justify='center'
-      borderBottom="1px solid rgba(224, 224, 224, 1)"
+      // borderBottom="1px solid rgba(224, 224, 224, 1)"
       fontWeight="bold"
       textAlign="center"
       h="20"

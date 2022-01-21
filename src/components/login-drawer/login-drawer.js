@@ -94,7 +94,6 @@ const LoginDrawer = ({onClose, isOpen }) => {
                 <DrawerContent>
                     <DrawerCloseButton />
                     <DrawerHeader>Login</DrawerHeader>
-
                     <DrawerBody>
                         <Box className="box" justify="center" align="center">
                             <Flex  direction="column" justify="center" mt="10">
@@ -117,19 +116,26 @@ const LoginDrawer = ({onClose, isOpen }) => {
                                     />
                                     <Flex align="center" mt="2">
                                         {passwordShown ?
-                                            <ViewOffIcon ml="2%" onClick={() => setPasswordShown(passwordShown => !passwordShown)}/> :
-                                            <ViewIcon ml="2%" onClick={() => setPasswordShown(passwordShown => !passwordShown)}/>}
+                                            <ViewOffIcon
+                                                ml="2%"
+                                                cursor="pointer"
+                                                onClick={() => setPasswordShown(passwordShown => !passwordShown)}/>
+                                            :
+                                            <ViewIcon
+                                                ml="2%"
+                                                cursor="pointer"
+                                                onClick={() => setPasswordShown(passwordShown => !passwordShown)}
+                                            />
+                                        }
                                         <FormHelperText mt="0" ml="5%">We'll never share your password.</FormHelperText>
                                     </Flex>
                                 </FormControl>
                             </Flex>
                         </Box>
                     </DrawerBody>
-
                     <DrawerFooter>
                         <ButtonGroup variant='outline' spacing='6' mt="5">
                             <Button onClick={handleSubmit}>Login</Button>
-                            {/*<Button colorScheme='blue' onClick={onClose}>Back</Button>*/}
                         </ButtonGroup>
                     </DrawerFooter>
                 </DrawerContent>

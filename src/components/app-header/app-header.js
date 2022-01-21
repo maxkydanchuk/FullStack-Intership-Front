@@ -7,17 +7,17 @@ import {
     Flex,
     Button,
     ButtonGroup,
-    Spacer,
+    Spacer, MenuItem, MenuList, MenuButton, Menu,
 } from "@chakra-ui/react";
-import {ChatIcon} from "@chakra-ui/icons";
+import {ChatIcon, ChevronDownIcon} from "@chakra-ui/icons";
 
 
-const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
+const AppHeader = ({onLogout, isAuthenticated, onDrawerOpen}) => {
 
     const user = localStorage.getItem('user')
     return (
         <>
-            <Flex align="center" direction="column">
+            <Flex className="test" align="center" direction="column">
                 <Flex align="center" justifyContent="space-between" direction="row" width='90%'>
                     <ButtonGroup variant="outline" spacing="6" mt="5">
                         <NavLink to="/" exact="true">
@@ -26,6 +26,7 @@ const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
                                 size="md"
                                 height="48px"
                                 boxShadow="0"
+                                colorScheme="linkedin"
                             >
                                 Home
                             </Button>
@@ -35,6 +36,7 @@ const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
                                 size="md"
                                 height="48px"
                                 variant="link"
+                                colorScheme="linkedin"
                             >
                                 People
                             </Button>
@@ -44,6 +46,7 @@ const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
                                 size="md"
                                 height="48px"
                                 variant="link"
+                                colorScheme="linkedin"
                             >
                                 Starships
                             </Button>
@@ -53,6 +56,7 @@ const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
                                 variant="link" ml="5"
                                 size="md"
                                 height="48px"
+                                colorScheme="linkedin"
                             > Chat <ChatIcon/>
                             </Button>
                         </NavLink>
@@ -60,20 +64,26 @@ const AppHeader = ({onLogout, isAuthenticated, onOpen}) => {
                     <Spacer/>
                     <Box mt="5">
                         {!isAuthenticated &&
-                        <Button variant="link" onClick={onOpen}> Login </Button>
+                        <Button variant="link" colorScheme="linkedin" onClick={onDrawerOpen}> Login </Button>
                         }
                         {!isAuthenticated &&
                         <NavLink to={'/register'}>
-                            <Button variant="link" ml="5"> Register </Button>
+                            <Button variant="link" colorScheme="linkedin" ml="5"> Register </Button>
                         </NavLink>
                         }
                         {isAuthenticated &&
-                        <Flex d="flex" align="center" justify="space-between" minWidth="200px" >
-                            <Box> {user} </Box>
-                            <NavLink to={'/'}>
-                                <Button variant="link" onClick={onLogout} outline="none"> Logout </Button>
-                            </NavLink>
-                        </Flex>
+                        <Menu>
+                            <MenuButton as={Button} variant="link" colorScheme="linkedin" rightIcon={<ChevronDownIcon w="7" h="7" />}>
+                                {user}
+                            </MenuButton>
+                            <MenuList>
+                                <NavLink to={'/'}>
+                                <MenuItem onClick={onLogout} >
+                                        Logout
+                                </MenuItem>
+                                </NavLink>
+                            </MenuList>
+                        </Menu>
                         }
                     </Box>
                 </Flex>

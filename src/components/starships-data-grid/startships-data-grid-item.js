@@ -14,22 +14,22 @@ const StarshipsPageItem = ({_id, starshipClass, MGLT, hyperdriveRating, pilots, 
 
     return (
         <>
-            <Box className="table__row_class" flex="2" pt="8" pb="8" textAlign={"center"}>
+            <Box className="table__row_class" color="white" flex="2" pt="8" pb="8" textAlign={"center"}>
                 {starshipClass}
             </Box>
-            <Box className="table__row_mglt" flex="2" pt="8" pb="8" textAlign={"center"}>
+            <Box className="table__row_mglt" color="white" flex="2" pt="8" pb="8" textAlign={"center"}>
                 {MGLT}
             </Box>
-            <Box className="table__row_hyperdriver" flex="2" pt="8" pb="8" textAlign={"center"}>
+            <Box className="table__row_hyperdriver" color="white" flex="2" pt="8" pb="8" textAlign={"center"}>
                 {hyperdriveRating}
             </Box>
-            <Box className="table__row_pilots" flex="2" pt="8" pb="8" textAlign={"center"}>
+            <Box className="table__row_pilots" color="white" flex="2" pt="8" pb="8" textAlign={"center"}>
                 {pilots}
             </Box>
-            {isAuthenticated && <Button colorScheme='teal' variant='link' flex="1" onClick={ () => onEditItem(starship)}>
+            {isAuthenticated && <Button colorScheme='linkedin' variant='link' flex="1" onClick={ () => onEditItem(starship)}>
                 Edit
             </Button>}
-            {isAuthenticated && <Button colorScheme='teal' variant='link' flex="1" onClick={() => dispatchDeleteStarship(_id, token)}>
+            {isAuthenticated && <Button colorScheme='linkedin' variant='link' flex="1" onClick={() => dispatchDeleteStarship(_id, token)}>
                 Delete
             </Button>}
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@chakra-ui/react";
+import {Box, Button} from "@chakra-ui/react";
 import {ArrowUpIcon, ArrowDownIcon, ArrowUpDownIcon} from "@chakra-ui/icons";
 
 function getArrows(order) {
@@ -12,7 +12,7 @@ function getArrows(order) {
 }
 
 const DataGridHeaderRow = ({props}) => {
-    const {buttons, sortOrder, onSortChange, sortColumn, isAuthenticated} = props;
+    const {buttons, sortOrder, onSortChange, sortColumn, isAuthenticated, onCreateItem, label} = props;
 
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
 
@@ -31,9 +31,10 @@ const DataGridHeaderRow = ({props}) => {
                     cursor="pointer"
                     flex="2"
                     _hover={{
-                        background: "white",
+                        // background: "white",
                         color: "teal.500",
                     }}
+                    color="white"
                 >
                     {label} {sortedArrows()}
                 </Box>
@@ -43,8 +44,18 @@ const DataGridHeaderRow = ({props}) => {
     return (
         <>
                {elements}
-                {isAuthenticated && <Box flex='1'/>}
-                {isAuthenticated && <Box flex='1'/>}
+            {isAuthenticated &&
+            <Box flex='2'>
+                <Button
+                    colorScheme='linkedin'
+                    variant='link'
+                    onClick={ () => onCreateItem({})}
+                >
+                    Add new {label}
+                </Button>
+            </Box>
+            }
+
         </>
     );
 };

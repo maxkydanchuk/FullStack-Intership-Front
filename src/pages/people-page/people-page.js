@@ -2,11 +2,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {React, useEffect, useState} from "react";
 import {deletePersonThunk, fetchPeopleData, resetStore} from "../../redux/people/peopleActions";
 import PeopleDataGrid from "../../components/people-data-grid";
-import PageNavbar from "../../components/page-navbar";
 import BottomButtons from "../../components/bottom-buttons";
 import PeopleModal from "../../components/people-modal";
 import AlertWindow from "../../components/alert-window/alert-window";
-import {useDisclosure} from "@chakra-ui/react";
+import {Box, useDisclosure} from "@chakra-ui/react";
+import AppHeader from "../../components/app-header";
+import SearchPanel from "../../components/search-panel";
 
 
 const PeoplePage = ({
@@ -16,7 +17,11 @@ const PeoplePage = ({
                         sortColumn,
                         onSearchChange,
                         inputValue,
-                        dispatchSetCurrentPage, isAuthenticated
+                        dispatchSetCurrentPage,
+                        isAuthenticated,
+                        onLogout,
+                        onDrawerOpen
+
                     }) => {
     const dispatch = useDispatch();
     const {isOpen, onOpen, onClose} = useDisclosure();
@@ -77,14 +82,9 @@ const PeoplePage = ({
 
     const label = 'person'
     return (
-        <>
-            <PageNavbar
-                onSearchChange={onSearchChange}
-                inputValue={inputValue}
-                onCreateItem={handleEditItem}
-                label={label}
-                isAuthenticated={isAuthenticated}
-            />
+        <Box className="datagrid__page" height="100vh">
+            <AppHeader onLogout={onLogout} onDrawerOpen={onDrawerOpen} isAuthenticated={isAuthenticated} />
+            <SearchPanel onSearchChange={onSearchChange} inputValue={inputValue}/>
             <PeopleModal
                 isOpen={isOpen}
                 onClose={onClose}
@@ -114,13 +114,15 @@ const PeoplePage = ({
                 onDeleteItem={handleDeleteItem}
                 token={token}
                 isAuthenticated={isAuthenticated}
+                onCreateItem={handleEditItem}
+                label={label}
             />
             <BottomButtons
                 currentPage={peopleCurrentPage}
                 totalPageCount={peopleTotalPageCount}
                 dispatchSetCurrentPage={dispatchSetCurrentPage}
             />
-        </>
+        </Box>
     );
 };
 

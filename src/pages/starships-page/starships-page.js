@@ -1,111 +1,114 @@
-import { React, useEffect, useState } from "react";
-import { fetchStarshipsData, resetStore, deleteStarshipThunk } from "../../redux/starships/starshipsActions";
-import { useDispatch, useSelector } from "react-redux";
+import {React, useEffect, useState} from "react";
+import {fetchStarshipsData, resetStore, deleteStarshipThunk} from "../../redux/starships/starshipsActions";
+import {useDispatch, useSelector} from "react-redux";
 import StarshipsDataGrid from "../../components/starships-data-grid";
-import PageNavbar from "../../components/page-navbar";
 import BottomButtons from "../../components/bottom-buttons";
-import { useDisclosure} from "@chakra-ui/react";
+import {Box, useDisclosure} from "@chakra-ui/react";
 import StarshipsModal from "../../components/starships-modal";
+import AppHeader from "../../components/app-header";
+import SearchPanel from "../../components/search-panel";
 
 
 const StarshipsPage = ({
-                         onSortChange,
-                         sortOrder,
-                         setOrder,
-                         sortColumn,
-                         onSearchChange,
-                         inputValue,
-                         dispatchSetCurrentPage, isAuthenticated
+                           onSortChange,
+                           sortOrder,
+                           setOrder,
+                           sortColumn,
+                           onSearchChange,
+                           inputValue,
+                           dispatchSetCurrentPage,
+                           isAuthenticated,
+                           onLogout,
+                           onDrawerOpen
                        }) => {
-  const dispatch = useDispatch();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+    const dispatch = useDispatch();
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
-  const starshipsStore = useSelector((state) => ({
-    starshipsData: state.starships.data,
-    starshipsError: state.starships.error,
-    starshipsLoading: state.starships.loading,
-    starshipsCurrentPage: state.starships.currentPage,
-    starshipsTotalPageCount: state.starships.totalCount,
-  }));
+    console.log(isAuthenticated)
 
-  const authStore = useSelector((state) => ({
-    token: state.auth.token
-  }));
+    const starshipsStore = useSelector((state) => ({
+        starshipsData: state.starships.data,
+        starshipsError: state.starships.error,
+        starshipsLoading: state.starships.loading,
+        starshipsCurrentPage: state.starships.currentPage,
+        starshipsTotalPageCount: state.starships.totalCount,
+    }));
 
-  let {
-    starshipsData = [],
-    starshipsCurrentPage,
-    starshipsTotalPageCount,
-  } = starshipsStore;
+    const authStore = useSelector((state) => ({
+        token: state.auth.token
+    }));
 
-  let  {
-    token
-  } = authStore;
+    let {
+        starshipsData = [],
+        starshipsCurrentPage,
+        starshipsTotalPageCount,
+    } = starshipsStore;
 
-  const dispatchDeleteStaship = (id, token) => {
-    dispatch(deleteStarshipThunk(id, token));
-  }
-  useEffect(() => {
-    dispatch(
-        fetchStarshipsData(
-            {sortOrder,sortColumn, inputValue, currentPage: starshipsCurrentPage,}, starshipsData
-        )
-    );
-  }, [ sortOrder, sortColumn, inputValue, starshipsData.length, starshipsCurrentPage]);
+    let {
+        token
+    } = authStore;
 
-  useEffect(() => {
-    return () => {
-      dispatch(resetStore());
+    const dispatchDeleteStaship = (id, token) => {
+        dispatch(deleteStarshipThunk(id, token));
     }
-  }, [])
+    useEffect(() => {
+        dispatch(
+            fetchStarshipsData(
+                {sortOrder, sortColumn, inputValue, currentPage: starshipsCurrentPage,}, starshipsData
+            )
+        );
+    }, [sortOrder, sortColumn, inputValue, starshipsData.length, starshipsCurrentPage]);
 
-  const [itemToEdit, setItemToEdit] = useState();
+    useEffect(() => {
+        return () => {
+            dispatch(resetStore());
+        }
+    }, [])
 
-  const handleEditItem = (item) => {
-    setItemToEdit(item);
-    onOpen();
-  }
+    const [itemToEdit, setItemToEdit] = useState();
 
-  const label  = 'starship';
+    const handleEditItem = (item) => {
+        setItemToEdit(item);
+        onOpen();
+    }
 
-  return (
-      <>
-        <PageNavbar
-            onSearchChange={onSearchChange}
-            inputValue={inputValue}
-            onCreateItem={handleEditItem}
-            isAuthenticated={isAuthenticated}
-            label={label}
-        />
-        <StarshipsModal
-            isOpen={isOpen}
-            onClose={onClose}
-            starship={itemToEdit}
-            token={token}
-        />
-        <StarshipsDataGrid
-            starshipsData={starshipsData}
-            onSortChange={onSortChange}
-            sortOrder={sortOrder}
-            setOrder={() => setOrder}
-            sortColumn={sortColumn}
-            onSearchChange={onSearchChange}
-            dispatchDeleteStarship={dispatchDeleteStaship}
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
-            onEditItem={handleEditItem}
-            token={token}
-            isAuthenticated={isAuthenticated}
+    const label = 'starship';
 
-        />
-        <BottomButtons
-            currentPage={starshipsCurrentPage}
-            totalPageCount={starshipsTotalPageCount}
-            dispatchSetCurrentPage={dispatchSetCurrentPage}
-        />
-      </>
-  );
+    return (
+        <Box className="datagrid__page" height="100vh">
+            <AppHeader onLogout={onLogout} onDrawerOpen={onDrawerOpen} isAuthenticated={isAuthenticated} />
+            <SearchPanel onSearchChange={onSearchChange} inputValue={inputValue}/>
+            <StarshipsModal
+                isOpen={isOpen}
+                onClose={onClose}
+                starship={itemToEdit}
+                token={token}
+            />
+            <StarshipsDataGrid
+                starshipsData={starshipsData}
+                onSortChange={onSortChange}
+                sortOrder={sortOrder}
+                setOrder={() => setOrder}
+                sortColumn={sortColumn}
+                onSearchChange={onSearchChange}
+                dispatchDeleteStarship={dispatchDeleteStaship}
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                onEditItem={handleEditItem}
+                token={token}
+                isAuthenticated={isAuthenticated}
+                onCreateItem={handleEditItem}
+                label={label}
+
+            />
+            <BottomButtons
+                currentPage={starshipsCurrentPage}
+                totalPageCount={starshipsTotalPageCount}
+                dispatchSetCurrentPage={dispatchSetCurrentPage}
+            />
+        </Box>
+    );
 };
 
 export default StarshipsPage;

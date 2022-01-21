@@ -15,7 +15,6 @@ import RegisterPage from "../../pages/register-page/register-page";
 import {loginSuccess, setIsAuthenticated} from "../../redux/auth/authActions";
 import LoginDrawer from "../login-drawer/login-drawer";
 import ChatPage from "../../pages/chat-page/chat-page";
-import MainPage from "../main-page/main-page";
 
 
 function App() {
@@ -70,7 +69,7 @@ function App() {
     };
     return (
         <Router>
-                <Box style={{"height": " 100vh"}}>
+                <Box className="wrapper" height="100vh">
                     <LoginDrawer
                         isOpen={isOpen}
                         onOpen={onOpen}
@@ -78,15 +77,24 @@ function App() {
                     />
                     <Box
                         className="table__wrapper"
-                        border="1px solid rgba(224, 224, 224, 1)"
+                        height="100vh"
+                        // border="1px solid rgba(224, 224, 224, 1)"
                         borderBottom="none"
                         borderRadius="4"
                     >
-                        <AppHeader onLogout={onLogout} isAuthenticated={isAuthenticated} onOpen={onOpen}/>
+
                         <Routes>
+                            <Route path={"/"} element={
+                                <AppHeader onLogout={onLogout} isAuthenticated={isAuthenticated} onDrawerOpen={onOpen}/>
+                            }/>
                             <Route path='/login' element={<LoginPage/>}/>
-                            <Route path='/register' element={<RegisterPage/>}/>
-                            <Route path="/" element={<MainPage/>}/>
+                            <Route path='/register' element={
+                                <RegisterPage
+                                    isAuthenticated={isAuthenticated}
+                                    onLogout={onLogout}
+                                    onDrawerOpen={onOpen}
+                                />
+                            }/>
                             <Route
                                 path="/people"
                                 element={
@@ -99,11 +107,18 @@ function App() {
                                         inputValue={inputValue}
                                         dispatchSetCurrentPage={dispatchSetCurrentPage}
                                         isAuthenticated={isAuthenticated}
+                                        onLogout={onLogout}
+                                        onDrawerOpen={onOpen}
                                     />
                                 }
                             />
                             <Route path="/chat"
-                                   element={<ChatPage/>}
+                                   element={
+                                       <ChatPage
+                                           isAuthenticated={isAuthenticated}
+                                           onLogout={onLogout}
+                                           onDrawerOpen={onOpen}
+                                       />}
                             />
                             <Route
                                 path="/starships"
@@ -117,6 +132,8 @@ function App() {
                                         inputValue={inputValue}
                                         dispatchSetCurrentPage={dispatchSetCurrentPage}
                                         isAuthenticated={isAuthenticated}
+                                        onLogout={onLogout}
+                                        onDrawerOpen={onOpen}
                                     />
                                 }
                             />

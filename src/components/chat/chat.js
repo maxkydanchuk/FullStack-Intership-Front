@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from "react";
 import {io} from 'socket.io-client';
-import {Box, Button, Flex, FormControl, Textarea} from "@chakra-ui/react";
+import {Box, Button, Divider, Flex, FormControl, Textarea} from "@chakra-ui/react";
 import {SERVER_ULR, loginWelcomeMessage, requestLoginMessage} from "../../configs/config";
 import SearchPopover from "../search-popover/search-popover";
 import ScrollableFeed from "react-scrollable-feed";
@@ -142,7 +142,6 @@ const Chat = () => {
 
     return (
         <Flex className="chat"
-              border="1px solid rgba(159, 183, 197, 0.2)"
               borderRadius="8px"
               overflow="hidden"
               h="90vh"
@@ -152,11 +151,10 @@ const Chat = () => {
                  borderRight="1px solid rgba(159, 183, 197, 0.1)"
                  p="20px"
                  w="200px"
-                 backgroundColor="#f6f9fa"
             >
-                <hr/>
-                <b> Online</b>
-                <Flex direction="column">
+                <Box color="#FFF"> Online </Box>
+                <Divider orientation='horizontal' />
+                <Flex direction="column" color="lightblue">
                     { users ? users.map((item) => {
                         return (
                             <Box key={item}> {item}</Box>
@@ -176,9 +174,10 @@ const Chat = () => {
                          overflow="auto"
                     >
                         <Box className="welcome-message"
+                             color="#FFF"
                              fontSize="14"
                              margin="0, auto"
-                             opacity="0.5"
+                             // opacity="0.5"
                              mb="10"
                              textAlign="center">
                             {logged ? requestLoginMessage : loginWelcomeMessage}
@@ -186,16 +185,19 @@ const Chat = () => {
                         {elements}
                     </Box>
                 </ScrollableFeed>
-                <Box className="chat-footer">
+                <Box className="chat-footer" >
                     <FormControl
                         mt="20px"
                         pt="20px"
-                        borderTop="1px solid rgba(0, 0, 0, 0.1)"
+                        // borderTop="1px solid white"
+                        borderTop="2px solid rgba(159, 183, 197, 0.4)"
+                        // borderTop="1px solid rgba(0, 0, 0, 0.1)"
                     >
                         <Textarea
                             w="100%"
                             mb="10px"
                             resize="none"
+                            backgroundColor="#FFF"
                             isDisabled={logged}
                             value={messageValue}
                             onChange={(e) => setMessageValue(e.target.value)}
@@ -206,13 +208,14 @@ const Chat = () => {
                     </FormControl>
                 </Box>
             </Flex>
+            {/*<Divider orientation='vertical' />*/}
             <Flex
                 className="chat-menu"
-                borderRight="1px solid rgba(159, 183, 197, 0.1)"
+                // borderRight="1px solid rgba(159, 183, 197, 0.2)"
+                borderLeft="1px solid rgba(159, 183, 197, 0.2)"
                 justify="center"
                 p="20px"
                 w="40px"
-                backgroundColor="#f6f9fa"
             >
                 <Box>
                     <SearchPopover
