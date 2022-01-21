@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from './utils/test-utils';
 import App from "./components/app/app";
 import apiService from "./services/api-service";
+import fetchMock from "jest-fetch-mock"
 
 const api = new apiService()
 
@@ -12,18 +13,23 @@ const mockedData = {
     email: 'email@test.com',
 }
 
+beforeAll(() => {
+    global.fetch = fetchMock;
+})
+
 test('App has body', () => {
-    jest.useFakeTimers('legacy');
     render(<App/>);
     const body = document.querySelector('body');
     expect(body).toBeInTheDocument();
 });
 
 test('Login',   async() => {
-    const loginMock = jest.spyOn(api, 'getUser');
-    loginMock.mockResolvedValue(mockedData)
+
+    fetch.mockResponseOnce(JSON.stringify({
+        token: token,
+        email: 'email@test.com',
+    }));
 
     const response = await api.getUser();
-
     expect(response).toEqual(mockedData)
 })
