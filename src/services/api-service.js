@@ -92,11 +92,6 @@ export default class apiService {
     return {data:this._adaptStaships(res), totalCount: res.totalCount};
   };
 
-
-  createStarship = async (item) => {
-    return await this.postResource('/starships/', item);
-  }
-
   getUser = async ( data ) => {
     const res = await fetch(`${this._apiBase}/login`, {
       method: 'POST',
@@ -136,16 +131,9 @@ export default class apiService {
     if (!res.ok) {
       throw new Error(response.error);
     }
+
     return await response;
   }
-
-
-  getAllMessages = async () => {
-    const res = await this.getResource('/chat')
-
-    return await res
-  }
-
 
   _adaptPeople = (data) => {
     const result = [];
